@@ -1,0 +1,43 @@
+# Файл: .github/workflows/workflow.yml
+
+# Вимога 1: Назва workflow повинна вміщати ім'я користувача (github.actor).
+name: "CI Task Workflow — ${{ github.actor }}"
+
+run-name: ${{ github.actor }} is testing CI Task
+
+# Вимога 3: Встанови змінну середовища на рівні workflow.
+env:
+  GITHUB_ACTIONS: "Successfully configured GitHub Actions environment variable"
+
+# Вимога 2: Workflow має активуватися при створенні pull request (PR).
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  
+  workflow_dispatch:
+
+# Вимога 4: Workflow повинен містити одне завдання.
+jobs:
+  github-task-job: # Назва завдання
+    
+    # Вимога 5: Завдання має виконуватися на останній версії Ubuntu.
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      # Крок 1: Додай крок, який відобразить змінну середовища GITHUB_ACTIONS.
+      - name: Display GITHUB_ACTIONS Environment Variable
+        # Використовуємо коректний синтаксис: ${{ env.VAR_NAME }}
+        run: |
+          echo "Environment Variable: ${{ env.GITHUB_ACTIONS }}"
+      
+      # Крок 2: Додай крок, який покаже назву гілки та репозиторію.
+      - name: Display Branch and Repository Name
+        run: |
+          echo "Branch: ${{ github.head_ref }} | Repository: ${{ github.repository }}"
+      
+      # Крок 3: Додай крок, який покаже подію, яка ініціювала запуск workflow.
+      - name: Display Triggering Event
+        run: |
+          echo "Triggered by event: ${{ github.event_name }}"
